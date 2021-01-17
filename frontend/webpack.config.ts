@@ -46,6 +46,9 @@ const config: Configuration = {
     contentBase: path.join(__dirname, 'static'),
     open: true,
     port: 3000,
+    proxy: {
+      '/api': 'http://backend:8080',
+    },
   },
   plugins: [new Dotenv()],
 }

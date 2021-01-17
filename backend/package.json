@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "mongoose": "^5.11.12",
+    "node-dev": "^6.2.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node-dev index.js"
+  }
+}

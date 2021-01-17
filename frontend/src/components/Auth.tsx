@@ -127,7 +127,7 @@ const Auth = ({ history }: Props) => {
     if (email === 'admin@example.com') {
       await history.push('/admin')
     } else {
-      await history.push('/hello')
+      await history.push('/feed')
     }
   }
 

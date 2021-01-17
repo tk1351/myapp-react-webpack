@@ -11,3 +11,18 @@ services:
     volumes:
       - ./frontend:/myapp/frontend
     tty: true
+    depends_on:
+      - 'backend'
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.dev
+    command: 'yarn dev'
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./backend:/myapp/backend
+    tty: true
+    environment:
+      CHOKIDAR_USEPOLLING: 1
