@@ -18,6 +18,8 @@ import { Formik, Form } from 'formik'
 import { selectUser } from '../features/authSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { Link, RouteComponentProps } from 'react-router-dom'
+import Sidebar from '../components/Sidebar'
+import { convertPostingDateToJapanTime } from './Post'
 
 interface Comment {
   _id: string
@@ -114,8 +116,10 @@ const SinglePostPage = ({ match, history }: any | Props) => {
   const findAuthorName = (uid: string) => {
     return users.find((user: { uid: string }) => user.uid === uid)?.username
   }
+
   return (
     <div>
+      <p>{convertPostingDateToJapanTime(singlePost.createdAt)}</p>
       <Avatar src={fetchAuthorData.photoUrl} />
       <p>
         <Link to={`/user/profile/${singlePost.uid}`}>
@@ -178,6 +182,7 @@ const SinglePostPage = ({ match, history }: any | Props) => {
           </Formik>
         </>
       )}
+      <Sidebar />
     </div>
   )
 }

@@ -3,6 +3,7 @@ import Router from './Router'
 import { login, logout } from './features/authSlice'
 import { auth } from './firebase'
 import { useDispatch } from 'react-redux'
+import Navbar from './components/Navbar'
 
 interface Props {}
 
@@ -27,7 +28,11 @@ const App = ({}: Props) => {
       unSub()
     }
   }, [dispatch])
-  return <Router />
+  return (
+    <>
+      <Router />
+    </>
+  )
 }
 
 export default App

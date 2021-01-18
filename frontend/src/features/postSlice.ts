@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { Profile } from './userSlice'
 
 interface PostData {
   title: string
@@ -19,6 +20,7 @@ export interface PostedData {
   url: string
   fav: number
   image: string
+  createdAt: any
 }
 
 const initialState = {
@@ -77,6 +79,15 @@ export const deletePostWithSinglePostArgument = createAsyncThunk(
   'posts/deletePostWithSinglePostArgument',
   async (singlePost: PostedData) => {
     const url = `/api/v1/post/${singlePost._id}`
+    const res = await axios.delete(url)
+    return res.data
+  }
+)
+
+export const deleteUsersPost = createAsyncThunk(
+  'posts/deleteUsersPost',
+  async (user: Profile) => {
+    const url = `/api/v1/post/user/${user.uid}`
     const res = await axios.delete(url)
     return res.data
   }
@@ -145,6 +156,16 @@ export const postsSlice = createSlice({
       state.posts.splice(deletePostDataWithSinglePostArgument, 1)
     },
     [deletePostWithSinglePostArgument.rejected as any]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+    },
+    [deleteUsersPost.fulfilled as any]: (state: any, action) => {
+      const deleteUsersPostData = state.posts.findIndex(
+        (post: { _id: string }) => post._id === action.meta.arg._id
+      )
+      state.posts.splice(deleteUsersPostData, 1)
+    },
+    [deleteUsersPost.rejected as any]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
     },

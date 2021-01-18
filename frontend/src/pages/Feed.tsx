@@ -9,7 +9,9 @@ import { fetchAvatars, selectAllUsers } from '../features/userSlice'
 import { fetchCategoriesData } from '../features/categorySlice'
 import { fetchCommentsData } from '../features/commentSlice'
 import Post, { PostProps } from './Post'
-import Paginations from './Paginations'
+import Paginations from '../components/Paginations'
+import Sidebar from '../components/Sidebar'
+import AuthState from '../components/AuthState'
 
 const Feed = () => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -85,7 +87,7 @@ const Feed = () => {
   }
 
   return (
-    <div>
+    <AuthState>
       {currentPosts[0]?._id && (
         <>
           {currentPosts?.map((post: PostProps) => (
@@ -101,7 +103,8 @@ const Feed = () => {
         totalPosts={orderedPosts.length}
         paginate={paginate}
       />
-    </div>
+      <Sidebar />
+    </AuthState>
   )
 }
 

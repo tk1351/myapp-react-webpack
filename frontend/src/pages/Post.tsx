@@ -1,13 +1,17 @@
 import React from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAllCategories } from '../features/categorySlice'
 import { selectUser } from '../features/authSlice'
 import { selectAllPosts, deletePost, PostedData } from '../features/postSlice'
 import { selectAllUsers } from '../features/userSlice'
 import { Avatar } from '@material-ui/core'
+import moment from 'moment'
 
-interface Props extends RouteComponentProps {}
+export const convertPostingDateToJapanTime = (createdAt: any) => {
+  moment.locale('ja')
+  return moment(createdAt).format('YYYY/MM/DD')
+}
 
 export interface PostProps {
   _id: string
@@ -62,7 +66,7 @@ const Post: React.FC<PostData> = ({ props }) => {
 
   return (
     <div>
-      {/* <p>{convertPostingDateToJapanTime(props.createdAt)}</p> */}
+      <p>{convertPostingDateToJapanTime(props.createdAt)}</p>
       <p>
         <Link to={`/user/profile/${props.uid}`}>
           Author: {findAuthorName(props.uid)}
