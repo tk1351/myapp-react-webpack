@@ -31,7 +31,7 @@ const SearchResult = () => {
     fetchPostsDataByQueryParams()
   }, [])
 
-  const orderdPosts = postLists
+  const orderedPosts = postLists
     .slice()
     .sort((a, b) =>
       convertPostingDateToJapanTime(b.createdAt).localeCompare(
@@ -62,7 +62,7 @@ const SearchResult = () => {
   return (
     <div>
       <h2>検索結果</h2>
-      {orderdPosts.map((post: PostProps) => (
+      {orderedPosts.map((post: PostProps) => (
         <>
           <Avatar src={matchUidAndPhotoUrl(post.uid)} />
           <p>{convertPostingDateToJapanTime(post.createdAt)}</p>

@@ -11,12 +11,6 @@ const AdminPostsList = () => {
 
   const posts = useSelector(selectAllPosts)
 
-  // const orderedPosts = posts
-  //   .slice()
-  //   .sort((a: { createdAt: string }, b: { createdAt: string }) =>
-  //     b.createdAt.localeCompare(a.createdAt)
-  //   )
-
   const orderedPosts = posts
     .slice()
     .sort((a: { createdAt: any }, b: { createdAt: any }) =>
