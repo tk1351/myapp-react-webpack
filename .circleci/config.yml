@@ -1,0 +1,66 @@
+version: 2.1
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run: |
+          echo 'export NVM_DIR="/opt/circleci/.nvm"' >> $BASH_ENV
+          echo ' [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+      - run: |
+          node -v
+      - run: |
+          nvm install v14.15.1
+          node -v
+          nvm alias default v14.15.1
+      - run: |
+          node -v
+      - run:
+          command: gpg --recv-key 78BD65473CB3BD13 && gpg -a --export 78BD65473CB3BD13 | sudo apt-key add -
+      - run:
+          command: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - run:
+          command: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run:
+          command: sudo apt-get update && sudo apt-get install yarn
+      - run:
+          command: node -v
+      # - run:
+      #     command: sudo locate libcrypto.so.1.0.0
+      # - run:
+      #     command: cd backend && ls
+      # - run:
+      #     command: sudo apt-get install libssl1.0.0 libssl-dev
+      # - run:
+      #     command: cd backend && mkdir libcrypto && ls
+      # - run:
+      #     command: cd .. && ls
+      # - run:
+      #     command: sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /myapp/backend/libcrypto/
+      # - run:
+      #     command: cd backend && mkdir libcrypto && ls && sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 libcrypto
+      # - run:
+      #     command: cd backend && cd libcrypto && ls
+      - run:
+          command: docker-compose up -f docker-compose.dev.yml --build -d
+      # - run:
+      #     command: pwd && sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /project/backend/libcrypto/
+      - run:
+          command: cd frontend && yarn install --frozon-lockfile && ls
+      - run:
+          command: cd backend && yarn install --frozon-lockfile && ls
+      # # - run:
+      #     command: sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /myapp/backend/node_modules/.cache/mongodb-memory-server/mongodb-binaries/4.0.14/mongod/
+      - run:
+          command: docker-compose -f docker-compose.dev.yml up -d
+      - run:
+          command: docker-compose -f docker-compose.dev.yml exec frontend yarn test --watchAll=false
+      # - run:
+      #     command: docker-compose exec backend /bin/bash -c "cd libcrypto && ls"
+      # - run:
+      #     command: docker-compose exec backend cp libcrypto/libcrypto.so.1.0.0 node_modules/.cache/mongodb-memory-server/mongodb-binaries/4.0.14/mongod
+      - run:
+          command: docker-compose -f docker-compose.dev.yml exec backend yarn test --watchAll=false
+      - run:
+          command: docker-compose -f docker-compose.dev.yml down

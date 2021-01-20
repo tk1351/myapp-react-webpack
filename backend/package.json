@@ -9,11 +9,24 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.3",
+    "jest": "^26.6.3",
+    "mongodb-memory-server": "^6.9.3",
     "mongoose": "^5.11.12",
     "node-dev": "^6.2.0"
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "node-dev index.js"
+    "dev": "node-dev index.js",
+    "test": "jest --maxWorkers 4 --detectOpenHandles"
+  },
+  "jest": {
+    "preset": "@shelf/jest-mongodb"
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "debug": "1",
+      "version": "4.2.3"
+    }
   }
 }
