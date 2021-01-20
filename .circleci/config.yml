@@ -43,7 +43,7 @@ jobs:
       # - run:
       #     command: cd backend && cd libcrypto && ls
       - run:
-          command: docker-compose up -f docker-compose.dev.yml --build -d
+          command: docker-compose -f docker-compose.dev.yml up --build -d
       # - run:
       #     command: pwd && sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /project/backend/libcrypto/
       - run:
