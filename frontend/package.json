@@ -51,6 +51,6 @@
   "scripts": {
     "dev": "webpack serve --host 0.0.0.0 --mode=development",
     "build": "npx webpack --mode=development",
-    "test": "jest --maxWorkers=8"
+    "test": "jest"
   }
 }
