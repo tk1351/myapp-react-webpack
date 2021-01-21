@@ -54,7 +54,7 @@ jobs:
       - run:
           command: docker-compose -f docker-compose.dev.yml exec backend yarn test --watchAll=false
       - run:
-          command: docker-compose -f docker-compose.dev.yml exec ps
+          command: docker-compose -f docker-compose.dev.yml ps
       #   - run:
       #       command: docker-compose -f docker-compose.dev.yml exec frontend yarn test --watchAll=false
       - run:
