@@ -47,6 +47,8 @@ jobs:
       #     command: sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /myapp/backend/node_modules/.cache/mongodb-memory-server/mongodb-binaries/4.0.14/mongod/
       - run:
           command: docker-compose -f docker-compose.test.yml up -d
+      - run:
+          command: docker-compose -f docker-compose.test.yml ps
       # - run:
       #     command: docker-compose exec backend /bin/bash -c "cd libcrypto && ls"
       # - run:
