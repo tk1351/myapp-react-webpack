@@ -48,7 +48,7 @@ jobs:
       - run:
           command: docker-compose -f docker-compose.test.yml up -d
       - run:
-          command: docker-compose -f docker-compose.test.yml ps
+          command: docker-compose -f docker-compose.test.yml exec backend mkdir config && touch dev.js
       # - run:
       #     command: docker-compose exec backend /bin/bash -c "cd libcrypto && ls"
       # - run:
