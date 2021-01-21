@@ -48,7 +48,7 @@ jobs:
       - run:
           command: docker-compose -f docker-compose.dev.yml up -d
       - run:
-          command: docker-compose -f docker-compose.dev.yml exec frontend yarn test --maxWorkers=8 --runInBand --watchAll=false
+          command: docker-compose -f docker-compose.dev.yml exec frontend yarn test --watchAll=false
       # - run:
       #     command: docker-compose exec backend /bin/bash -c "cd libcrypto && ls"
       # - run:
