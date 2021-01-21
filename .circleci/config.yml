@@ -11,18 +11,14 @@ jobs:
       - run: |
           nvm install v14.15.1
           nvm alias default v14.15.1
-    #   - run: |
-    #       node -v
-        - run:
-            command: gpg --recv-key 78BD65473CB3BD13 && gpg -a --export 78BD65473CB3BD13 | sudo apt-key add -
-        - run:
-            command: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-        - run:
-            command: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run:
+          command: gpg --recv-key 78BD65473CB3BD13 && gpg -a --export 78BD65473CB3BD13 | sudo apt-key add -
+      - run:
+          command: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      - run:
+          command: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       - run:
           command: sudo apt-get update && sudo apt-get install yarn
-      - run:
-          command: node -v
       # - run:
       #     command: sudo locate libcrypto.so.1.0.0
       # - run:
