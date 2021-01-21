@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile.test
+    command: 'yarn start'
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/myapp/frontend
+    tty: true
+    depends_on:
+      - 'backend'
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.test
+    command: 'yarn start'
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./backend:/myapp/backend
+    tty: true
+    environment:
+      CHOKIDAR_USEPOLLING: 1

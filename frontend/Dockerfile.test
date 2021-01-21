@@ -1,0 +1,13 @@
+FROM node:14.15.1-alpine3.12
+
+WORKDIR /myapp/frontend
+
+COPY frontend/package.json .
+COPY frontend/yarn.lock .
+RUN yarn install
+
+COPY ./frontend .
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]

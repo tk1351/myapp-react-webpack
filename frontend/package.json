@@ -49,6 +49,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "scripts": {
+    "start": "webpack serve --host 0.0.0.0 --mode=development",
     "dev": "webpack serve --host 0.0.0.0 --mode=development",
     "build": "npx webpack --mode=development",
     "test": "jest --maxWorkers 4 --detectOpenHandles"
