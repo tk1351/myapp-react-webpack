@@ -40,9 +40,9 @@ jobs:
       # - run:
       #     command: pwd && sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /project/backend/libcrypto/
       - run:
-          command: cd frontend && yarn install --frozon-lockfile && ls
+          command: cd frontend && rf -rm node_modules && yarn install --frozon-lockfile && ls
       - run:
-          command: cd backend && yarn install --frozon-lockfile && ls
+          command: cd backend && rf -rm node_modules && yarn install --frozon-lockfile && ls
       # # - run:
       #     command: sudo cp /lib/x86_64-linux-gnu/libcrypto.so.1.0.0 /myapp/backend/node_modules/.cache/mongodb-memory-server/mongodb-binaries/4.0.14/mongod/
       - run:
