@@ -1,11 +1,5 @@
 import path from 'path'
 import webpack, { Configuration } from 'webpack'
-import Dotenv = require('dotenv-webpack')
-import dotenv from 'dotenv'
-
-dotenv.config()
-
-const env = require(path.join(__dirname, './.env'))
 
 const config: Configuration = {
   context: path.join(__dirname, 'src'),
@@ -50,7 +44,6 @@ const config: Configuration = {
       '/api': 'http://backend:8080',
     },
   },
-  plugins: [new Dotenv()],
 }
 
 export default config
