@@ -19,6 +19,8 @@ jobs:
           command: echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
       - run:
           command: sudo apt-get update && sudo apt-get install yarn
+      - run:
+          command: echo ${DB_URI}
       # - run:
       #     command: sudo locate libcrypto.so.1.0.0
       # - run:
