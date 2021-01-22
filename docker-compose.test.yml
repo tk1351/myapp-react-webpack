@@ -23,6 +23,5 @@ services:
       - '8080:8080'
     volumes:
       - ./backend:/myapp/backend
-    # tty: true
     environment:
       CHOKIDAR_USEPOLLING: 1
