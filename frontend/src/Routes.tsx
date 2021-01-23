@@ -1,5 +1,10 @@
 import React from 'react'
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom'
 import Hello from './pages/Hello'
 import Top from './pages/Top'
 import Auth from './pages/Auth'
@@ -16,9 +21,9 @@ import AdminUsersList from './pages/Admin/AdminUsersList'
 import AdminPostsList from './pages/Admin/AdminPostsList'
 import AdminPostDetail from './pages/Admin/AdminPostDetail'
 
-const Router = () => {
+const Routes = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Navbar />
       <Switch>
         <Route exact={true} path="/" component={Top} />
@@ -38,8 +43,8 @@ const Router = () => {
         {/* Not Found */}
         <Route component={() => <Redirect to="/" />} />
       </Switch>
-    </BrowserRouter>
+    </Router>
   )
 }
 
-export default Router
+export default Routes

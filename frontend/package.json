@@ -35,6 +35,7 @@
     "@types/webpack-dev-server": "^3.11.1",
     "babel-jest": "^26.6.3",
     "babel-plugin-react-css-modules": "^5.2.6",
+    "css-loader": "^5.0.1",
     "dotenv": "^8.2.0",
     "dotenv-webpack": "^6.0.0",
     "jest": "^26.6.3",
@@ -49,7 +50,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "scripts": {
-    "start": "webpack serve --host 0.0.0.0 --mode=development",
+    "start": "webpack serve --host 0.0.0.0 --mode=production",
     "dev": "webpack serve --host 0.0.0.0 --mode=development",
     "build": "npx webpack --mode=development",
     "test": "jest --maxWorkers 4 --detectOpenHandles"

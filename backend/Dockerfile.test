@@ -2,8 +2,8 @@ FROM node:14.15.1
 
 WORKDIR /myapp/backend
 
-COPY frontend/package.json .
-COPY frontend/yarn.lock .
+COPY backend/package.json .
+COPY backend/yarn.lock .
 RUN yarn install
 
 COPY ./backend .

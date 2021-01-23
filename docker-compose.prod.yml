@@ -2,10 +2,7 @@ version: '3'
 
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile.test
-    command: 'yarn dev'
+    image: 514445668943.dkr.ecr.ap-northeast-1.amazonaws.com/myapp-frontend:latest
     ports:
       - '3000:3000'
     volumes:
@@ -15,10 +12,7 @@ services:
       - 'backend'
 
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile.test
-    command: 'yarn start'
+    image: 514445668943.dkr.ecr.ap-northeast-1.amazonaws.com/myapp-backend:latest
     ports:
       - '8080:8080'
     volumes:

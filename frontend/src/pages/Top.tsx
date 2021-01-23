@@ -1,12 +1,15 @@
 import React from 'react'
 import { Link, RouteComponentProps, Router } from 'react-router-dom'
+import styles from '../styles/top.module.css'
 
 interface Props extends RouteComponentProps {}
 
 const Top = ({ history }: Props) => {
   return (
     <div>
-      <h1>あなたのビジネスに役立つICT製品がきっと見つかる!</h1>
+      <h1 className={styles.top}>
+        あなたのビジネスに役立つICT製品がきっと見つかる!
+      </h1>
       <div>
         <p>
           <Router history={history}>

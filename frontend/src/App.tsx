@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import Router from './Router'
+import Routes from './Routes'
 import { login, logout } from './features/authSlice'
 import { auth } from './firebase'
 import { useDispatch } from 'react-redux'
-import Navbar from './components/Navbar'
 
 interface Props {}
 
@@ -30,7 +29,7 @@ const App = ({}: Props) => {
   }, [dispatch])
   return (
     <>
-      <Router />
+      <Routes />
     </>
   )
 }
