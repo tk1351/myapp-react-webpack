@@ -38,6 +38,15 @@ export const fetchPostData = createAsyncThunk(
   }
 )
 
+export const fetchPostDataById = createAsyncThunk(
+  'posts/fetchPostDataById',
+  async (id: string) => {
+    const url = `/api/v1/post/${id}`
+    const res = await axios.get(url)
+    return res.data
+  }
+)
+
 export const addNewPost = createAsyncThunk(
   'posts/addNewPost',
   async (newValues: PostData) => {
@@ -106,6 +115,14 @@ export const postsSlice = createSlice({
       state.posts = state.posts.concat(action.payload)
     },
     [fetchPostData.rejected as any]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+    },
+    [fetchPostDataById.fulfilled as any]: (state, action) => {
+      state.status = 'succeeded'
+      state.posts = state.posts.concat(action.payload)
+    },
+    [fetchPostDataById.rejected as any]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
     },

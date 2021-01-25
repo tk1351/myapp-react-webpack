@@ -5,13 +5,12 @@ import { deleteUsersPost } from '../../features/postSlice'
 
 const AdminUsersList = () => {
   const users = useSelector(selectAllUsers)
+
   const dispatch = useDispatch()
 
   const adminUsers = users.filter(
     (user: { role: string }) => user.role === 'user'
   )
-
-  console.log(adminUsers)
 
   const onDeleteUserClicked = async (user: Profile) => {
     if (window.confirm('ユーザーを削除してもよろしいですか？')) {

@@ -15,6 +15,7 @@ export interface Profile {
   position: string
   bio: string
   url: string
+  role: string
 }
 
 export const fetchAvatars = createAsyncThunk('users/fetchAvatars', async () => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   selectAllPosts,
@@ -11,10 +11,23 @@ import { Avatar } from '@material-ui/core'
 import { RouteComponentProps } from 'react-router-dom'
 import { convertPostingDateToJapanTime } from '../Post'
 
+const initialPostState: PostedData = {
+  _id: '',
+  uid: '',
+  title: '',
+  text: '',
+  categoryId: '',
+  url: '',
+  fav: 0,
+  image: '',
+  createdAt: '',
+}
+
 interface Props extends RouteComponentProps {}
 
 const AdminPostDetail = ({ match, history }: any | Props) => {
   const { id } = match.params
+  const [singlePost, setSinglePost] = useState<PostedData>(initialPostState)
 
   const posts = useSelector(selectAllPosts)
   const categories = useSelector(selectAllCategories)
@@ -22,9 +35,11 @@ const AdminPostDetail = ({ match, history }: any | Props) => {
 
   const dispatch = useDispatch()
 
-  const singlePost: PostedData = posts.find(
-    (post: { _id: string }) => post._id === id
-  )
+  const postStatus = useSelector((state: any) => state.postData.status)
+
+  useEffect(() => {
+    setSinglePost(posts.find((post: { _id: string }) => post._id === id))
+  }, [postStatus])
 
   const matchCategoriesIdAndCategoriesName = (categoryId: string) => {
     return categories.find(
@@ -43,7 +58,9 @@ const AdminPostDetail = ({ match, history }: any | Props) => {
     }
   }
 
-  return (
+  return !singlePost ? (
+    <></>
+  ) : (
     <div>
       <h1>記事詳細</h1>
       <p>{convertPostingDateToJapanTime(singlePost.createdAt)}</p>

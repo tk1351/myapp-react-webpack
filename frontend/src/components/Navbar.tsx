@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { auth } from '../firebase'
 import {
@@ -14,7 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import Search from './Search'
 import { selectUser } from '../features/authSlice'
 import { useSelector } from 'react-redux'
-import { selectAllUsers } from '../features/userSlice'
+import { selectAllUsers, Profile } from '../features/userSlice'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,18 +45,32 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
+const initialUserState = {
+  uid: '',
+  username: '',
+  photoUrl: '',
+  company: '',
+  position: '',
+  bio: '',
+  url: '',
+  role: '',
+}
+
 interface Props extends RouteComponentProps {}
 
 const Navbar = ({ history }: Props) => {
   const classes = useStyles()
+  const [authUserRole, setAuthUserRole] = useState<Profile>(initialUserState)
 
   const authUser = useSelector(selectUser)
   const users = useSelector(selectAllUsers)
 
-  // loginユーザーのroleを特定
-  const findAuthUsersRole = users.find(
-    (user: { uid: string }) => user.uid === authUser.uid
-  )?.role
+  useEffect(() => {
+    // loginユーザーのroleを特定
+    setAuthUserRole(
+      users.find((user: { uid: string }) => user.uid === authUser.uid)
+    )
+  }, [authUser])
 
   const isAuthMenuList = [
     { key: '1', path: '/feed', name: 'Feed' },
@@ -69,7 +83,7 @@ const Navbar = ({ history }: Props) => {
   const adminMenuList = [{ key: '1', path: '/admin', name: '管理画面' }]
 
   const menuList = () => {
-    if (findAuthUsersRole === 'user') {
+    if (authUserRole && authUserRole.role === 'user') {
       return (
         <>
           {isAuthMenuList.map((menu) => (
@@ -87,7 +101,7 @@ const Navbar = ({ history }: Props) => {
           </button>
         </>
       )
-    } else if (findAuthUsersRole === 'admin') {
+    } else if (authUserRole && authUserRole.role === 'admin') {
       return adminMenuList.map((menu) => (
         <Link key={menu.key} to={menu.path}>
           {menu.name}

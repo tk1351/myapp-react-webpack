@@ -12,12 +12,9 @@ import {
 import { Formik, Form } from 'formik'
 import PhotoCamera from '@material-ui/icons/PhotoCamera'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-  selectAllCategories,
-  fetchCategoriesData,
-} from '../features/categorySlice'
+import { selectAllCategories } from '../features/categorySlice'
 import { Category } from '../components/Sidebar'
-import { PostedData, updatePost } from '../features/postSlice'
+import { PostedData, updatePost, selectAllPosts } from '../features/postSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { storage } from '../firebase'
 import { RouteComponentProps } from 'react-router-dom'
@@ -32,42 +29,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const initialPostState: PostedData = {
+  _id: '',
+  uid: '',
+  title: '',
+  text: '',
+  categoryId: '',
+  url: '',
+  fav: 0,
+  image: '',
+  createdAt: '',
+}
+
 interface Props extends RouteComponentProps {}
 
 const EditPost = ({ history, match }: any | Props) => {
   const { id } = match.params
-  const singlePost = useSelector((state: any) =>
-    state.postData.posts.find((post: { _id: string }) => post._id === id)
-  )
-
-  const initialValues: PostedData = {
-    _id: singlePost._id,
-    uid: singlePost.uid,
-    title: singlePost.title,
-    text: singlePost.text,
-    categoryId: singlePost.categoryId,
-    url: singlePost.url,
-    fav: singlePost.fav,
-    image: singlePost.image,
-    createdAt: singlePost.createdAt,
-  }
-
-  const classes = useStyles()
   const [postImage, setPostImage] = useState<File | null>(null)
+  const [singlePost, setSinglePost] = useState<PostedData>(initialPostState)
+  const classes = useStyles()
 
+  const posts = useSelector(selectAllPosts)
   const categories = useSelector(selectAllCategories)
-
-  const categoriesStatus = useSelector(
-    (state: any) => state.categoriesData.status
-  )
-
+  const postStatus = useSelector((state: any) => state.postData.status)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategoriesData())
-    }
-  }, [categoriesStatus, dispatch])
+    setSinglePost(posts.find((post: { _id: string }) => post._id === id))
+  }, [postStatus])
+
+  const initialValues: PostedData = {
+    _id: singlePost && singlePost._id,
+    uid: singlePost && singlePost.uid,
+    title: singlePost && singlePost.title,
+    text: singlePost && singlePost.text,
+    categoryId: singlePost && singlePost.categoryId,
+    url: singlePost && singlePost.url,
+    fav: singlePost && singlePost.fav,
+    image: singlePost && singlePost.image,
+    createdAt: singlePost && singlePost.createdAt,
+  }
 
   const onUpdatePostClicked = async (values: PostedData) => {
     let imageUrl = ''
@@ -118,6 +119,7 @@ const EditPost = ({ history, match }: any | Props) => {
         記事を編集する
       </Typography>
       <Formik
+        enableReinitialize={true}
         initialValues={initialValues}
         onSubmit={(values: PostedData) => {
           onUpdatePostClicked(values)

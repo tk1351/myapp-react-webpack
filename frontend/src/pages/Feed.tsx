@@ -67,18 +67,18 @@ const Feed = () => {
   useEffect(() => {
     loginUserState()
     fetchAvatars()
-    if (postStatus === 'idle') {
-      dispatch(fetchPostData())
-    }
-    if (userStatus === 'idle') {
-      dispatch(fetchAvatars())
-    }
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategoriesData())
-    }
-    if (commentsStatus === 'idle') {
-      dispatch(fetchCommentsData())
-    }
+    // if (postStatus === 'idle') {
+    //   dispatch(fetchPostData())
+    // }
+    // if (userStatus === 'idle') {
+    //   dispatch(fetchAvatars())
+    // }
+    // if (categoriesStatus === 'idle') {
+    //   dispatch(fetchCategoriesData())
+    // }
+    // if (commentsStatus === 'idle') {
+    //   dispatch(fetchCommentsData())
+    // }
   }, [user, postStatus, userStatus, categoriesStatus, commentsStatus, dispatch])
 
   // 投稿者のuidからphotoUrlを探す

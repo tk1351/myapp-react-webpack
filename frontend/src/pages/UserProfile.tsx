@@ -6,10 +6,7 @@ import {
   PostedData,
   deletePostWithPostArgument,
 } from '../features/postSlice'
-import {
-  selectAllCategories,
-  fetchCategoriesData,
-} from '../features/categorySlice'
+import { selectAllCategories } from '../features/categorySlice'
 import { Avatar } from '@material-ui/core'
 import { PostProps } from './Post'
 import { Link } from 'react-router-dom'
@@ -17,29 +14,48 @@ import { selectUser } from '../features/authSlice'
 import Paginations from '../components/Paginations'
 import Sidebar from '../components/Sidebar'
 
+const initialUserState: Profile = {
+  uid: '',
+  username: '',
+  photoUrl: '',
+  company: '',
+  position: '',
+  bio: '',
+  url: '',
+  role: '',
+}
+
+const initialPostsState: PostedData[] = [
+  {
+    _id: '',
+    uid: '',
+    title: '',
+    text: '',
+    categoryId: '',
+    url: '',
+    fav: 0,
+    image: '',
+    createdAt: '',
+  },
+]
+
 const UserProfile = ({ match }: any) => {
   const { id } = match.params
 
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage] = useState(5)
+  const [singleUser, setSingleUser] = useState<Profile>(initialUserState)
+  const [usersPosts, setUsersPosts] = useState<PostedData[]>(initialPostsState)
 
   const users = useSelector(selectAllUsers)
   const posts = useSelector(selectAllPosts)
   const categories = useSelector(selectAllCategories)
   const authUser = useSelector(selectUser)
 
-  const categoriesStatus = useSelector(
-    (state: any) => state.categoriesData.status
-  )
+  const userStatus = useSelector((state: any) => state.userData.status)
+  const postStatus = useSelector((state: any) => state.postData.status)
 
   const dispatch = useDispatch()
-
-  const singleUser: Profile = users.find(
-    (user: { uid: string }) => user.uid === id
-  )
-  const usersPosts = posts.filter(
-    (post: { uid: string }) => post.uid === singleUser.uid
-  )
 
   const orderedPosts = usersPosts
     .slice()
@@ -54,10 +70,11 @@ const UserProfile = ({ match }: any) => {
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategoriesData())
-    }
-  }, [categoriesStatus, dispatch])
+    setSingleUser(users.find((user: { uid: string }) => user.uid === id))
+    setUsersPosts(
+      posts.filter((post: { uid: string }) => post.uid === singleUser?.uid)
+    )
+  }, [userStatus, postStatus, singleUser])
 
   const matchCategoriesIdAndCategoriesName = (categoryId: string) => {
     return categories.find(
@@ -74,7 +91,10 @@ const UserProfile = ({ match }: any) => {
       dispatch(deletePostWithPostArgument(post))
     }
   }
-  return (
+
+  return !singleUser ? (
+    <></>
+  ) : (
     <div>
       <Avatar src={singleUser.photoUrl} />
       <p>ユーザー名：{singleUser.username}</p>

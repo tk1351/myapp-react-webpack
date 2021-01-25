@@ -5,11 +5,8 @@ import {
   PostedData,
   deletePostWithSinglePostArgument,
 } from '../features/postSlice'
-import {
-  selectAllCategories,
-  fetchCategoriesData,
-} from '../features/categorySlice'
-import { selectAllUsers, fetchAvatars } from '../features/userSlice'
+import { selectAllCategories } from '../features/categorySlice'
+import { selectAllUsers, Profile } from '../features/userSlice'
 import { Avatar, TextField, Button } from '@material-ui/core'
 import MessageIcon from '@material-ui/icons/Message'
 import SendIcon from '@material-ui/icons/Send'
@@ -37,12 +34,53 @@ const initialValues = {
   createdAt: null,
 }
 
+const initialPostState: PostedData = {
+  _id: '',
+  uid: '',
+  title: '',
+  text: '',
+  categoryId: '',
+  url: '',
+  fav: 0,
+  image: '',
+  createdAt: '',
+}
+
+const initialUserState: Profile = {
+  uid: '',
+  username: '',
+  photoUrl: '',
+  company: '',
+  position: '',
+  bio: '',
+  url: '',
+  role: '',
+}
+
+const initialCommentState: Comment[] = [
+  {
+    _id: '',
+    uid: '',
+    photoUrl: '',
+    text: '',
+    createdAt: '',
+  },
+]
+
 interface Props extends RouteComponentProps {}
 
 const SinglePostPage = ({ match, history }: any | Props) => {
   const { id } = match.params
 
   const [openComments, setOpenComments] = useState(false)
+  const [singlePost, setSinglePost] = useState<PostedData>(initialPostState)
+  const [ownPostData, setOwnPostData] = useState<PostedData>(initialPostState)
+  const [fetchAuthorData, setFetchAuthorData] = useState<Profile>(
+    initialUserState
+  )
+  const [commentsOnThisPost, setCommentsOnThisPost] = useState<Comment[]>(
+    initialCommentState
+  )
 
   const posts = useSelector(selectAllPosts)
   const categories = useSelector(selectAllCategories)
@@ -52,35 +90,29 @@ const SinglePostPage = ({ match, history }: any | Props) => {
 
   const dispatch = useDispatch()
 
-  const singlePost = posts.find((post: { _id: string }) => post._id === id)
-
+  const postStatus = useSelector((state: any) => state.postData.status)
   const userStatus = useSelector((state: any) => state.userData.status)
-  const categoriesStatus = useSelector(
-    (state: any) => state.categoriesData.status
-  )
 
   useEffect(() => {
-    if (categoriesStatus === 'idle') {
-      dispatch(fetchCategoriesData())
-    }
-    if (userStatus === 'idle') {
-      dispatch(fetchAvatars())
-    }
-  }, [categoriesStatus, userStatus, dispatch])
+    setSinglePost(posts.find((post: { _id: string }) => post._id === id))
+    setFetchAuthorData(
+      users.find((user: { uid: string }) => user.uid === singlePost?.uid)
+    )
+    setCommentsOnThisPost(
+      comments.filter(
+        (comment: { postId: string }) => comment.postId === singlePost._id
+      )
+    )
+    setOwnPostData(
+      posts.find((post: { uid: string }) => post.uid === authUser.uid)
+    )
+  }, [postStatus, userStatus, fetchAuthorData])
 
   const matchCategoriesIdAndCategoriesName = (categoryId: string) => {
     return categories.find(
       (category: { _id: string }) => category._id === categoryId
     )?.name
   }
-
-  const fetchAuthorData = users.find(
-    (user: { uid: string }) => user.uid === singlePost.uid
-  )
-
-  const commentsOnThisPost = comments.filter(
-    (comment: { postId: string }) => comment.postId === singlePost._id
-  )
 
   // コメントした人のuidから名前を特定する
   const matchUidAndUsername = (uid: string) => {
@@ -102,10 +134,6 @@ const SinglePostPage = ({ match, history }: any | Props) => {
     }
   }
 
-  const findOwnPostData = posts.find(
-    (post: { uid: string }) => post.uid === authUser.uid
-  )
-
   const onDeletePostClicked = async (singlePost: PostedData) => {
     if (window.confirm('記事を削除してもよろしいですか？')) {
       dispatch(deletePostWithSinglePostArgument(singlePost))
@@ -117,10 +145,12 @@ const SinglePostPage = ({ match, history }: any | Props) => {
     return users.find((user: { uid: string }) => user.uid === uid)?.username
   }
 
-  return (
+  return !singlePost ? (
+    <></>
+  ) : (
     <div>
       <p>{convertPostingDateToJapanTime(singlePost.createdAt)}</p>
-      <Avatar src={fetchAuthorData.photoUrl} />
+      <Avatar src={fetchAuthorData && fetchAuthorData.photoUrl} />
       <p>
         <Link to={`/user/profile/${singlePost.uid}`}>
           Author: {findAuthorName(singlePost.uid)}
@@ -132,7 +162,7 @@ const SinglePostPage = ({ match, history }: any | Props) => {
       <p>
         カテゴリー： {matchCategoriesIdAndCategoriesName(singlePost.categoryId)}
       </p>
-      {findOwnPostData?.uid === singlePost.uid ? (
+      {ownPostData && ownPostData?.uid === singlePost.uid ? (
         <>
           <button>
             <Link to={`/post/edit/${singlePost._id}`}>編集する</Link>
@@ -147,13 +177,14 @@ const SinglePostPage = ({ match, history }: any | Props) => {
       <MessageIcon onClick={() => setOpenComments(!openComments)} />
       {openComments && (
         <>
-          {commentsOnThisPost.map((com: Comment) => (
-            <div key={com._id}>
-              <Avatar src={com.photoUrl} />
-              <span>@{matchUidAndUsername(com.uid)}</span>
-              <span>{com.text}</span>
-            </div>
-          ))}
+          {commentsOnThisPost &&
+            commentsOnThisPost.map((com: Comment) => (
+              <div key={com._id}>
+                <Avatar src={com.photoUrl} />
+                <span>@{matchUidAndUsername(com.uid)}</span>
+                <span>{com.text}</span>
+              </div>
+            ))}
           <Formik
             initialValues={initialValues}
             onSubmit={(values: Comment) => {

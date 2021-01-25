@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   makeStyles,
   Typography,
@@ -30,32 +30,44 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
+const initialUserState: Profile = {
+  uid: '',
+  username: '',
+  photoUrl: '',
+  company: '',
+  position: '',
+  bio: '',
+  url: '',
+  role: '',
+}
+
 interface Props extends RouteComponentProps {}
 
 const EditProfile = ({ history, match }: any | Props) => {
-  const [postImage, setPostImage] = useState<File | null>(null)
   const { id } = match.params
+  const [postImage, setPostImage] = useState<File | null>(null)
+  const [singleUser, setSingleUser] = useState<Profile>(initialUserState)
   const classes = useStyles()
 
   const users = useSelector(selectAllUsers)
+  const userStatus = useSelector((state: any) => state.userData.status)
 
   const dispatch = useDispatch()
 
-  const singleUser: Profile = users.find(
-    (user: { uid: string }) => user.uid === id
-  )
+  useEffect(() => {
+    setSingleUser(users.find((user: { uid: string }) => user.uid === id))
+  }, [userStatus])
 
   const initialValues: Profile = {
-    uid: singleUser.uid,
-    username: singleUser.username,
-    photoUrl: singleUser.photoUrl,
-    company: singleUser.company,
-    position: singleUser.position,
-    bio: singleUser.bio,
-    url: singleUser.url,
+    uid: singleUser && singleUser.uid,
+    username: singleUser && singleUser.username,
+    photoUrl: singleUser && singleUser.photoUrl,
+    company: singleUser && singleUser.company,
+    position: singleUser && singleUser.position,
+    bio: singleUser && singleUser.bio,
+    url: singleUser && singleUser.url,
+    role: singleUser && singleUser.role,
   }
-
-  console.log('uid', singleUser.uid)
 
   const onUpdateProfileClicked = async (values: Profile) => {
     let imageUrl = ''
@@ -110,6 +122,7 @@ const EditProfile = ({ history, match }: any | Props) => {
         プロフィールを編集する
       </Typography>
       <Formik
+        enableReinitialize={true}
         initialValues={initialValues}
         onSubmit={(values: Profile) => {
           onUpdateProfileClicked(values)

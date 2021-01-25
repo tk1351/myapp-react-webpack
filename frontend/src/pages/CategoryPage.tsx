@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   selectAllPosts,
@@ -11,10 +11,18 @@ import { selectUser } from '../features/authSlice'
 import { PostProps } from './Post'
 import { Link } from 'react-router-dom'
 import { Avatar } from '@material-ui/core'
-import Sidebar from '../components/Sidebar'
+import Sidebar, { Category } from '../components/Sidebar'
 
-export const CategoryPage = ({ match }: any) => {
+const initialCategoriesState = {
+  _id: '',
+  name: '',
+}
+
+const CategoryPage = ({ match }: any) => {
   const { id } = match.params
+  const [categoriesName, setCategoriesName] = useState<Category>(
+    initialCategoriesState
+  )
 
   const posts = useSelector(selectAllPosts)
   const categories = useSelector(selectAllCategories)
@@ -23,13 +31,19 @@ export const CategoryPage = ({ match }: any) => {
 
   const dispatch = useDispatch()
 
+  const categoriesStatus = useSelector(
+    (state: any) => state.categoriesData.status
+  )
+
+  useEffect(() => {
+    setCategoriesName(
+      categories.find((category: { _id: string }) => category._id === id)
+    )
+  }, [categoriesStatus, id])
+
   const categoriesPosts = posts.filter(
     (categoriesPost: { categoryId: string }) => categoriesPost.categoryId === id
   )
-
-  const getCategoriesName = categories.find(
-    (category: { _id: string }) => category._id === id
-  ).name
 
   const orderedPosts = categoriesPosts
     .slice()
@@ -63,7 +77,7 @@ export const CategoryPage = ({ match }: any) => {
 
   return (
     <div>
-      <h1>{getCategoriesName}</h1>
+      <h1>{categoriesName && categoriesName.name}</h1>
       {orderedPosts[0]?._id && (
         <>
           {orderedPosts?.map((post: PostProps) => (
@@ -101,3 +115,5 @@ export const CategoryPage = ({ match }: any) => {
     </div>
   )
 }
+
+export default CategoryPage
